@@ -46,10 +46,20 @@
         "id": "a70b18dd39b5be89",
         "type": "inject",
         "z": "bd9487b28b0b9fc4",
-        "name": "saludo",
+        "name": "Sensor Falso 1",
         "props": [
             {
+                "p": "sensorId",
+                "v": "Temp1",
+                "vt": "str"
+            },
+            {
                 "p": "payload"
+            },
+            {
+                "p": "max",
+                "v": "15",
+                "vt": "str"
             }
         ],
         "repeat": "",
@@ -59,8 +69,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 90,
-        "y": 120,
+        "x": 120,
+        "y": 80,
         "wires": [
             [
                 "d53b521830b30a47"
@@ -72,31 +82,19 @@
         "type": "function",
         "z": "bd9487b28b0b9fc4",
         "name": "prepare_azure_menssage",
-        "func": "const dataMessage={\nSensorId:msg.sensorid,\nvalue:msg.payload,\ntimestamp:msg.timestamp};\n\nconst azureMessage={\n    \"deviceId\": \"master_device_04MIOT\",\n\n    \"key\": \"HAzj1u78e3Hjzotp3n5bWiG/or0/kEAFaM635VwISLM=\",\n\n    \"protocol\": \"mqtt\",\n\n    \"data\": dataMessage\n};\n\nconst message2send = {};\n\nmessage2send.payload = azureMessage;\n\nreturn message2send;",
+        "func": "const dataMessage={\nSensorId:msg.sensorId,\nvalue:msg.payload,\ntimestamp:msg.timestamp};\n\nconst azureMessage={\n    \"deviceId\": \"master_device_04MIOT\",\n\n    \"key\": \"HAzj1u78e3Hjzotp3n5bWiG/or0/kEAFaM635VwISLM=\",\n\n    \"protocol\": \"mqtt\",\n\n    \"data\": dataMessage\n};\n\nconst message2send = {};\n\nmessage2send.payload = azureMessage;\n\nreturn message2send;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 470,
-        "y": 120,
+        "x": 730,
+        "y": 80,
         "wires": [
             [
-                "1ec5c6b44974472f",
+                "33c890035a5e39f3",
                 "55f2c52370cb3c1a"
             ]
-        ]
-    },
-    {
-        "id": "1ec5c6b44974472f",
-        "type": "azureiothub",
-        "z": "bd9487b28b0b9fc4",
-        "name": "Azure IoT Hub",
-        "protocol": "mqtt",
-        "x": 700,
-        "y": 120,
-        "wires": [
-            []
         ]
     },
     {
@@ -104,14 +102,14 @@
         "type": "function",
         "z": "bd9487b28b0b9fc4",
         "name": "random",
-        "func": "const randomValue={};\nrandomValue.sensorId=msg.sensorId;\nrandomValue.payload=Math.random()*msg.max;\nreturn randomValue;\n",
+        "func": "const randomValue={};\nrandomValue.sensorId=msg.sensorId;\nrandomValue.payload=Math.random()*msg.max;\nrandomValue.timestamp = \"2023-03-13\";\nreturn randomValue;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 260,
-        "y": 120,
+        "x": 420,
+        "y": 80,
         "wires": [
             [
                 "7230f5a93c745783"
@@ -132,7 +130,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 120,
-        "y": 320,
+        "y": 200,
         "wires": [
             [
                 "5a85148dbcb60fe0"
@@ -152,8 +150,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 500,
-        "y": 400,
+        "x": 1220,
+        "y": 320,
         "wires": []
     },
     {
@@ -169,8 +167,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 700,
-        "y": 240,
+        "x": 960,
+        "y": 280,
         "wires": []
     },
     {
@@ -184,8 +182,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 280,
-        "y": 420,
+        "x": 420,
+        "y": 200,
         "wires": [
             [
                 "7230f5a93c745783"
@@ -193,12 +191,24 @@
         ]
     },
     {
+        "id": "33c890035a5e39f3",
+        "type": "azureiothub",
+        "z": "bd9487b28b0b9fc4",
+        "name": "Azure IoT Hub",
+        "protocol": "amqp",
+        "x": 1040,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
         "id": "182a36dfc036504b",
         "type": "azureiothubreceiver",
         "z": "bec477c3682790c5",
         "name": "Azure IoT Hub Receiver",
-        "x": 140,
-        "y": 260,
+        "x": 220,
+        "y": 120,
         "wires": [
             [
                 "1c30962b36091cf5"
@@ -218,8 +228,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 380,
-        "y": 260,
+        "x": 500,
+        "y": 120,
         "wires": []
     }
 ]
