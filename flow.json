@@ -43,14 +43,131 @@
         "sessionExpiry": ""
     },
     {
+        "id": "c5388aabf1b694f3",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "35955ffc3fddcfc7",
+        "type": "ui_tab",
+        "name": "Principal",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "4e8c6174e7db3bc2",
+        "type": "ui_group",
+        "name": "Lector Sensores",
+        "tab": "35955ffc3fddcfc7",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
         "id": "a70b18dd39b5be89",
         "type": "inject",
         "z": "bd9487b28b0b9fc4",
-        "name": "Sensor Falso 1",
+        "name": "Sensor Humedad 1",
         "props": [
             {
                 "p": "sensorId",
-                "v": "Temp1",
+                "v": "SH-1",
                 "vt": "str"
             },
             {
@@ -69,8 +186,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 120,
-        "y": 80,
+        "x": 150,
+        "y": 120,
         "wires": [
             [
                 "d53b521830b30a47"
@@ -82,14 +199,14 @@
         "type": "function",
         "z": "bd9487b28b0b9fc4",
         "name": "prepare_azure_menssage",
-        "func": "const dataMessage={\nSensorId:msg.sensorId,\nvalue:msg.payload,\ntimestamp:msg.timestamp};\n\nconst azureMessage={\n    \"deviceId\": \"master_device_04MIOT\",\n\n    \"key\": \"HAzj1u78e3Hjzotp3n5bWiG/or0/kEAFaM635VwISLM=\",\n\n    \"protocol\": \"mqtt\",\n\n    \"data\": dataMessage\n};\n\nconst message2send = {};\n\nmessage2send.payload = azureMessage;\n\nreturn message2send;",
+        "func": "// Se crea un objeto \"dataMessage\" con tres propiedades: SensorId, value y timestamp, \n// las cuales son extraídas de la entrada del mensaje original.\nconst dataMessage = {\n    SensorId: msg.sensorId,\n    value: msg.payload,\n    timestamp: msg.timestamp\n};\n\n// Se crea un objeto \"azureMessage\" con cuatro propiedades: deviceId, key, protocol y data. \n// deviceId se refiere al identificador del dispositivo en Azure IoT Hub al cual se enviará el mensaje. \n// key es la clave de seguridad del dispositivo para autenticar el mensaje. \n// protocol se refiere al protocolo de transporte utilizado para enviar el mensaje (en este caso, MQTT). \n// data contiene el objeto \"dataMessage\" creado anteriormente.\nconst azureMessage = {\n    \"deviceId\": \"master_device_04MIOT\",\n    \"key\": \"HAzj1u78e3Hjzotp3n5bWiG/or0/kEAFaM635VwISLM=\",\n    \"protocol\": \"mqtt\",\n    \"data\": dataMessage\n};\n\n// Se crea un objeto vacío \"message2send\".\nconst message2send = {};\n\n// Se agrega el objeto \"azureMessage\" creado anteriormente como propiedad \"payload\" del objeto \"message2send\".\nmessage2send.payload = azureMessage;\n\n// Se devuelve el objeto \"message2send\" para que se envíe al siguiente nodo de Node-RED.\nreturn message2send;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
         "x": 730,
-        "y": 80,
+        "y": 120,
         "wires": [
             [
                 "33c890035a5e39f3",
@@ -101,15 +218,15 @@
         "id": "d53b521830b30a47",
         "type": "function",
         "z": "bd9487b28b0b9fc4",
-        "name": "random",
+        "name": "Funcion Sensor Humedad",
         "func": "const randomValue={};\nrandomValue.sensorId=msg.sensorId;\nrandomValue.payload=Math.random()*msg.max;\nrandomValue.timestamp = \"2023-03-13\";\nreturn randomValue;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 420,
-        "y": 80,
+        "x": 410,
+        "y": 120,
         "wires": [
             [
                 "7230f5a93c745783"
@@ -130,7 +247,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 120,
-        "y": 200,
+        "y": 360,
         "wires": [
             [
                 "5a85148dbcb60fe0"
@@ -138,27 +255,10 @@
         ]
     },
     {
-        "id": "9b2b691369d9f3f2",
-        "type": "debug",
-        "z": "bd9487b28b0b9fc4",
-        "name": "debug 2",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1220,
-        "y": 320,
-        "wires": []
-    },
-    {
         "id": "55f2c52370cb3c1a",
         "type": "debug",
         "z": "bd9487b28b0b9fc4",
-        "name": "debug 3",
+        "name": "Mensaje enviado a Azure",
         "active": true,
         "tosidebar": true,
         "console": false,
@@ -167,8 +267,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 960,
-        "y": 280,
+        "x": 1010,
+        "y": 320,
         "wires": []
     },
     {
@@ -182,8 +282,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 420,
-        "y": 200,
+        "x": 460,
+        "y": 360,
         "wires": [
             [
                 "7230f5a93c745783"
@@ -195,11 +295,65 @@
         "type": "azureiothub",
         "z": "bd9487b28b0b9fc4",
         "name": "Azure IoT Hub",
-        "protocol": "amqp",
+        "protocol": "mqtt",
         "x": 1040,
-        "y": 80,
+        "y": 120,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "488bc740c51c5d2c",
+        "type": "inject",
+        "z": "bd9487b28b0b9fc4",
+        "name": "Sensor de Preción",
+        "props": [
+            {
+                "p": "sensorId",
+                "v": "SP-2",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            },
+            {
+                "p": "max",
+                "v": "200",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 220,
+        "wires": [
+            [
+                "ca863f761c1a10b5"
+            ]
+        ]
+    },
+    {
+        "id": "ca863f761c1a10b5",
+        "type": "function",
+        "z": "bd9487b28b0b9fc4",
+        "name": "Funcion Sensor Preción",
+        "func": "\nconst randomValue = {};\nrandomValue.sensorId = msg.sensorId;\nrandomValue.payload = Math.random() * msg.max;\n\nconst tiempoTranscurrido = Date.now();\nconst hoy = new Date(tiempoTranscurrido);\n\nrandomValue.timestamp = hoy;\nreturn randomValue;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 220,
+        "wires": [
+            [
+                "7230f5a93c745783"
+            ]
         ]
     },
     {
@@ -211,7 +365,8 @@
         "y": 120,
         "wires": [
             [
-                "1c30962b36091cf5"
+                "1c30962b36091cf5",
+                "08744b6266e995c3"
             ]
         ]
     },
@@ -219,7 +374,7 @@
         "id": "1c30962b36091cf5",
         "type": "debug",
         "z": "bec477c3682790c5",
-        "name": "debug 1",
+        "name": "debug Recivido desde Azure ",
         "active": true,
         "tosidebar": true,
         "console": false,
@@ -228,8 +383,169 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 500,
-        "y": 120,
+        "x": 380,
+        "y": 300,
         "wires": []
+    },
+    {
+        "id": "08744b6266e995c3",
+        "type": "function",
+        "z": "bec477c3682790c5",
+        "name": "Prepárar _dashboar_menssage",
+        "func": "const formatedMessage ={}\nformatedMessage.sensorId = msg.payload.SensorId;\nformatedMessage.payload = msg.payload.value;\nreturn formatedMessage; \n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 120,
+        "wires": [
+            [
+                "272053562cbbc0e2",
+                "71b2cd8710b35855"
+            ]
+        ]
+    },
+    {
+        "id": "71b2cd8710b35855",
+        "type": "debug",
+        "z": "bec477c3682790c5",
+        "name": "debug Recibido para el dashboard",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "sensorId",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "272053562cbbc0e2",
+        "type": "switch",
+        "z": "bec477c3682790c5",
+        "name": "Discriminador de sensores",
+        "property": "sensorId",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "SP-2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SH-1",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 980,
+        "y": 120,
+        "wires": [
+            [
+                "6ac8e4052f827b75",
+                "338dbc7236f0f4ea"
+            ],
+            [
+                "6ac8e4052f827b75",
+                "e3e5db6854e0bd42"
+            ]
+        ]
+    },
+    {
+        "id": "6ac8e4052f827b75",
+        "type": "debug",
+        "z": "bec477c3682790c5",
+        "name": "debug Recibido en el Swith",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1140,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "e3e5db6854e0bd42",
+        "type": "ui_gauge",
+        "z": "bec477c3682790c5",
+        "name": "",
+        "group": "4e8c6174e7db3bc2",
+        "order": 0,
+        "width": "3",
+        "height": "2",
+        "gtype": "gage",
+        "title": "Sensor de Humedad",
+        "label": "Umidity",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "15",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "7",
+        "seg2": "11",
+        "diff": false,
+        "className": "",
+        "x": 1360,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "338dbc7236f0f4ea",
+        "type": "ui_chart",
+        "z": "bec477c3682790c5",
+        "name": "",
+        "group": "4e8c6174e7db3bc2",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "Sensor de Presión",
+        "chartType": "bar",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "200",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": true,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1370,
+        "y": 60,
+        "wires": [
+            []
+        ]
     }
 ]
